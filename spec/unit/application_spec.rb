@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 require 'fileutils'
 
 describe ActiveAdmin::Application do
@@ -63,7 +63,7 @@ describe ActiveAdmin::Application do
   end
 
   it "should allow comments by default" do
-    expect(application.allow_comments).to eq true
+    expect(application.comments).to eq true
   end
 
   describe "authentication settings" do
@@ -132,8 +132,8 @@ describe ActiveAdmin::Application do
     it "finds or create the namespace and register the page to it" do
       namespace = double
       expect(application).to receive(:namespace).with("public").and_return namespace
-      expect(namespace).to receive(:register_page).with("My Page", {:namespace => "public"})
-      application.register_page("My Page", :namespace => "public")
+      expect(namespace).to receive(:register_page).with("My Page", {namespace: "public"})
+      application.register_page("My Page", namespace: "public")
     end
   end
 
