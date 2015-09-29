@@ -30,9 +30,11 @@ end
 Any form field that sends multiple values (such as a HABTM association, or an array attribute)
 needs to pass an empty array to `permit_params`:
 
+If your HABTM is `roles`, you should permit `role_ids: []`
+
 ```ruby
 ActiveAdmin.register Post do
-  permit_params :title, :content, :publisher_id, roles: []
+  permit_params :title, :content, :publisher_id, role_ids: []
 end
 ```
 
@@ -336,7 +338,7 @@ ActiveAdmin.register Ticket do
 end
 ```
 
-Projects will be available as usual and tickets will be availble by visiting
+Projects will be available as usual and tickets will be available by visiting
 `/admin/projects/1/tickets` assuming that a Project with the id of 1 exists.
 Active Admin does not add "Tickets" to the global navigation because the routes
 can only be generated when there is a project id.
@@ -367,7 +369,7 @@ end
 In some cases (like Projects), there are many sub resources and you would
 actually like the global navigation to switch when the user navigates "into" a
 project. To accomplish this, Active Admin stores the `belongs_to` resources in a
-seperate menu which you can use if you so wish. To use:
+separate menu which you can use if you so wish. To use:
 
 ```ruby
 ActiveAdmin.register Ticket do

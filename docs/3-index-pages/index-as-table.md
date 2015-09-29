@@ -55,6 +55,8 @@ index do
 end
 ```
 
+## Defining Actions
+
 To setup links to View, Edit and Delete a resource, use the `actions` method:
 
 ```ruby
@@ -84,6 +86,8 @@ index do
   column :title
   actions defaults: false do |post|
     item "View", admin_post_path(post)
+    item "Edit", edit_admin_post_path(post)
+    item "Delete", admin_post_path(post), method: :delete
   end
 end
 ```

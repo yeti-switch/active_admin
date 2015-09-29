@@ -6,8 +6,8 @@ module ActiveAdmin
   #   csv_builder = CSVBuilder.new
   #   csv_builder.column :id
   #   csv_builder.column("Name") { |resource| resource.full_name }
-  #   csv_builder.column(:name, humanize: false)
-  #   csv_builder.column("name", humanize: false) { |resource| resource.full_name }
+  #   csv_builder.column(:name, humanize_name: false)
+  #   csv_builder.column("name", humanize_name: false) { |resource| resource.full_name }
   #
   #   csv_builder = CSVBuilder.new col_sep: ";"
   #   csv_builder = CSVBuilder.new humanize_name: false
@@ -49,13 +49,17 @@ module ActiveAdmin
       end
 
       if options.delete(:column_names) { true }
-        receiver << CSV.generate_line(columns.map{ |c| encode c.name, options }, options)
+        receiver << CSV.generate_line(
+          columns.map { |c| encode c.name, options },
+          options.except(:encoding_options))
       end
 
       (1..paginated_collection.total_pages).each do |page_no|
         paginated_collection(page_no).each do |resource|
-           resource = controller.send :apply_decorator, resource
-           receiver << CSV.generate_line(build_row(resource, columns, options), options)
+          resource = controller.send :apply_decorator, resource
+          receiver << CSV.generate_line(
+            build_row(resource, columns, options),
+            options.except(:encoding_options))
         end
       end
     end

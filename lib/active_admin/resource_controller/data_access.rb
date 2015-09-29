@@ -277,14 +277,17 @@ module ActiveAdmin
       def collection_applies(options = {})
         only = Array(options.fetch(:only, COLLECTION_APPLIES))
         except = Array(options.fetch(:except, []))
-        COLLECTION_APPLIES && only - except
+        
+        # see #4074 for code reasons
+        COLLECTION_APPLIES.select { |applier| only.include? applier }
+                          .reject { |applier| except.include? applier }
       end
 
       def per_page
         if active_admin_config.paginate
           dynamic_per_page || configured_per_page
         else
-          max_per_page
+          active_admin_config.max_per_page
         end
       end
 
@@ -293,15 +296,7 @@ module ActiveAdmin
       end
 
       def configured_per_page
-        if active_admin_config.per_page.is_a?(Array)
-          active_admin_config.per_page[0]
-        else
-          active_admin_config.per_page
-        end
-      end
-
-      def max_per_page
-        10_000
+        Array(active_admin_config.per_page).first
       end
 
     end
