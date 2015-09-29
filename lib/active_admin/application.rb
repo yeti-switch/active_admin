@@ -28,6 +28,9 @@ module ActiveAdmin
     # The default number of resources to display on index pages
     inheritable_setting :default_per_page, 30
 
+    # The max number of resources to display on index pages and batch exports
+    inheritable_setting :max_per_page, 10_000
+
     # The title which gets displayed in the main layout
     inheritable_setting :site_title, ""
 
@@ -105,6 +108,9 @@ module ActiveAdmin
     # Set flash message keys that shouldn't show in ActiveAdmin
     inheritable_setting :flash_keys_to_except, ['timedout']
 
+    # Set default localize format for Date/Time values
+    inheritable_setting :localize_format, :long
+
     # Active Admin makes educated guesses when displaying objects, this is
     # the list of methods it tries calling in order
     setting :display_name_methods, [ :display_name,
@@ -155,7 +161,7 @@ module ActiveAdmin
 
       namespace = namespaces[name] ||= begin
         namespace = Namespace.new(self, name)
-        ActiveAdmin::Event.dispatch ActiveAdmin::Namespace::RegisterEvent, namespace
+        ActiveSupport::Notifications.publish ActiveAdmin::Namespace::RegisterEvent, namespace
         namespace
       end
 
@@ -191,10 +197,10 @@ module ActiveAdmin
     # To reload everything simply call `ActiveAdmin.unload!`
     def load!
       unless loaded?
-        ActiveAdmin::Event.dispatch BeforeLoadEvent, self # before_load hook
-        files.each{ |file| load file }                    # load files
-        namespace(default_namespace)                      # init AA resources
-        ActiveAdmin::Event.dispatch AfterLoadEvent, self  # after_load hook
+        ActiveSupport::Notifications.publish BeforeLoadEvent, self # before_load hook
+        files.each{ |file| load file }                             # load files
+        namespace(default_namespace)                               # init AA resources
+        ActiveSupport::Notifications.publish AfterLoadEvent, self  # after_load hook
         @@loaded = true
       end
     end

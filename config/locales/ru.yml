@@ -26,7 +26,7 @@ ru:
         clear: "Очистить"
       predicates:
         contains: "Содержит"
-        equals: "="
+        equals: "Равно"
         starts_with: "Начинается с"
         ends_with: "Заканчивается"
         greater_than: "больше"
@@ -82,6 +82,8 @@ ru:
       author: "Автор"
       title: "Комментарий"
       add: "Добавить Комментарий"
+      delete: "Удалить Комментарий"
+      delete_confirmation: "Вы уверены, что хотите удалить этот комментарий?"
       resource: "Ресурс"
       no_comments_yet: "Пока нет комментариев."
       author_missing: "Аноним"
